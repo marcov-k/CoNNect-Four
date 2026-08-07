@@ -1,37 +1,39 @@
-using UnityEngine;
 using UnityEditor;
-using AgentTraining;
+using UnityEngine;
 
-[CustomEditor(typeof(AgentTrainer))]
-public class AgentTrainerEditor : Editor
+namespace AgentTraining
 {
-    public override void OnInspectorGUI()
+    [CustomEditor(typeof(AgentTrainer))]
+    public class AgentTrainerEditor : Editor
     {
-        DrawDefaultInspector();
-
-        AgentTrainer trainer = (AgentTrainer)target;
-
-        EditorGUILayout.Space(15);
-
-        EditorGUILayout.LabelField("Controls", EditorStyles.boldLabel);
-
-        if (GUILayout.Button("Initialize New Agent"))
+        public override void OnInspectorGUI()
         {
-            trainer.InitializeAgent();
-        }
+            DrawDefaultInspector();
 
-        EditorGUILayout.Space(3);
+            AgentTrainer trainer = (AgentTrainer)target;
 
-        if (GUILayout.Button("Load Existing Agent"))
-        {
-            trainer.LoadAgent();
-        }
+            EditorGUILayout.Space(15);
 
-        EditorGUILayout.Space(3);
+            EditorGUILayout.LabelField("Controls", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Train Loaded Agent"))
-        {
-            trainer.TrainAgent();
+            if (GUILayout.Button("Initialize New Agent"))
+            {
+                trainer.InitializeAgent();
+            }
+
+            EditorGUILayout.Space(3);
+
+            if (GUILayout.Button("Load Existing Agent"))
+            {
+                trainer.LoadAgent();
+            }
+
+            EditorGUILayout.Space(3);
+
+            if (GUILayout.Button("Train Loaded Agent"))
+            {
+                trainer.TrainAgent();
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
-using UnityEngine;
 using NNNCSharp.Components.Models;
 using NNNCSharp.Components.Models.Layers;
 using NNNCSharp.Components.Trainers;
 using NNNCSharp.Components.Utilities.SaveSystem;
+using UnityEngine;
 using System;
 using System.IO;
 
@@ -27,11 +27,17 @@ namespace AgentTraining
         public void LoadAgent()
         {
             Saver.DirectoryPath = Path.Combine(Application.streamingAssetsPath, agentSaveDirectory);
+            agent = Saver.LoadModel(agentSaveName);
         }
 
         public void TrainAgent()
         {
 
+        }
+
+        public string GetAgentSaveDirectory()
+        {
+            return agentSaveDirectory;
         }
     }
 }
