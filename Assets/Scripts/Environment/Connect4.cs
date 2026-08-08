@@ -182,10 +182,10 @@ namespace Environment
                 filled = 1;
                 var (rowStep, colStep) = dir switch
                 {
-                    0 => (-1, 0), // horizontal - starting towards left
-                    1 => (-1, 1), // diagonal - starting towards top left
-                    2 => (0, 1), // vertical - starting towards top
-                    3 => (1, 1), // diagonal - starting towards top right
+                    0 => (0, -1), // horizontal - starting towards left
+                    1 => (-1, -1), // diagonal - starting towards top left
+                    2 => (-1, 0), // vertical - starting towards top
+                    3 => (-1, 1), // diagonal - starting towards top right
                     _ => throw new Exception("Invalid Direction")
                 };
 
