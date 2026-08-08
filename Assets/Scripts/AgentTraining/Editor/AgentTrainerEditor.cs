@@ -1,11 +1,14 @@
 using UnityEditor;
 using UnityEngine;
+using System.Threading.Tasks;
 
 namespace AgentTraining
 {
     [CustomEditor(typeof(AgentTrainer))]
     public class AgentTrainerEditor : Editor
     {
+        Task trainingTask = null;
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -32,7 +35,14 @@ namespace AgentTraining
 
             if (GUILayout.Button("Train Loaded Agent"))
             {
-                trainer.TrainAgent();
+                if (trainingTask == null || trainingTask.IsCompleted)
+                {
+                    trainingTask = Task.Run(trainer.TrainAgent);
+                }
+                else
+                {
+                    Debug.Log("Agent training already in progress.");
+                }
             }
         }
     }

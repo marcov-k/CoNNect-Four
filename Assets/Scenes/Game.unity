@@ -457,9 +457,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5819db4bd4145641849474f03153d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  episodes: 1000
+  episodes: 600
+  minExperiences: 2000
+  startExploration: 1
+  explorationDecay: 0.999
+  minExploration: 0.001
+  replayBufferSize: 20000
+  batchSize: 128
+  agentBufferSize: 4
+  opponentCopyRate: 600
+  minRandomOpponentEpisodes: 600
+  trainEvery: 1
+  learningRate: 0.001
+  discount: 0.99
+  tau: 0.005
+  maxGradNorm: 1
+  testEvery: 200
+  testEpisodes: 100
   agentSaveDirectory: Agents
-  agentSaveName: NewAgent
+  agentSaveName: TestAgent
 --- !u!4 &736289823
 Transform:
   m_ObjectHideFlags: 0

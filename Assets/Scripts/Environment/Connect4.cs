@@ -96,9 +96,9 @@ namespace Environment
             state.Data[..^1].CopyTo(gridState.Data);
             for (int row = 0; row < RowCount; row++)
             {
-                if (gridState[row, action] != 0.0f) return false;
+                if (gridState[row, action] == 0.0f) return true;
             }
-            return true;
+            return false;
         }
 
         public override (float reward, Tensor nextState, bool done) Step(int action, int steps)
@@ -113,6 +113,7 @@ namespace Environment
             int wins = 0, ties = 0;
             for (int e = 0; e < testEpisodes; e++)
             {
+                Reset();
                 var (won, tied) = PlayRandom(agent);
                 if (won) wins++;
                 else if (tied) ties++;
@@ -234,17 +235,19 @@ namespace Environment
 
         (bool won, bool tied) PlayRandom(Model agent)
         {
-            bool won = false, tied = false;
+            bool? won = null;
+            bool tied = false;
 
-            while (!won && !tied)
+            while (won == null && !tied)
             {
+                bool agentActing = AgentTurn;
                 int action = AgentTurn ? GetAgentAction(agent) : PickRandomAction();
                 TakeAction(action);
-                won = Won(action);
-                tied = !won && BoardFilled();
+                if (Won(action)) won = agentActing;
+                tied = won == null && BoardFilled();
             }
 
-            return (won, tied);
+            return (won != null ? won.Value : false, tied);
         }
 
         public Tensor GetBoard() => State;
