@@ -101,7 +101,7 @@ namespace AgentTraining
             NNNLog.WriteLine("Agent loaded.");
         }
 
-        public async Task TrainAgent()
+        public void TrainAgent()
         {
             NNNLog.Output = Debug.Log;
 
@@ -159,6 +159,11 @@ namespace AgentTraining
         public string GetAgentSaveDirectoryPath()
         {
             return Path.Combine(Application.streamingAssetsPath, agentSaveDirectory);
+        }
+
+        public string GetAgentSaveName()
+        {
+            return agentSaveName;
         }
     }
 }
