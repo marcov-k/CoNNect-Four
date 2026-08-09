@@ -49,8 +49,15 @@ namespace AgentTraining
 
             if (GUILayout.Button("Stop Training"))
             {
-                Debug.Log("Terminating training.\n");
-                trainer.StopTraining();
+                if (trainingTask != null && !trainingTask.IsCompleted)
+                {
+                    Debug.Log("Terminating training.\n");
+                    trainer.StopTraining();
+                }
+                else
+                {
+                    Debug.Log("No training session to terminate.\n");
+                }
             }
         }
     }
