@@ -13,7 +13,6 @@ using NNNCSharp.Components.Costs;
 using NNNCSharp.Components.Buffers;
 using NNNCSharp.Components.Activations;
 using System.Threading.Tasks;
-using System.Threading;
 
 namespace AgentTraining
 {
@@ -63,6 +62,7 @@ namespace AgentTraining
         [SerializeField] string agentSaveName = "NewAgent";
 
         Model agent;
+        DQNTrainer trainer;
 
         public void InitializeAgent()
         {
@@ -115,7 +115,7 @@ namespace AgentTraining
             Optimizer optimizer = new Adam(learningRate);
             Cost cost = new Huber();
 
-            DQNTrainer trainer = new(
+            trainer = new(
                 agent: agent,
                 environment: env,
                 optimizer: optimizer,
@@ -144,6 +144,11 @@ namespace AgentTraining
             Saver.DirectoryPath = GetAgentSaveDirectoryPath();
             Saver.SaveModel(agent, agentSaveName, "connect-four neural network player");
             NNNLog.WriteLine("Agent saved to file.");
+        }
+
+        public void StopTraining()
+        {
+            trainer.StopTraining();
         }
 
         public string GetAgentSaveDirectory()

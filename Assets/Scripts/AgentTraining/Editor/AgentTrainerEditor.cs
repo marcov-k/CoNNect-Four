@@ -41,8 +41,16 @@ namespace AgentTraining
                 }
                 else
                 {
-                    Debug.Log("Agent training already in progress.");
+                    Debug.Log("Agent training already in progress.\n");
                 }
+            }
+
+            EditorGUILayout.Space(3);
+
+            if (GUILayout.Button("Stop Training"))
+            {
+                Debug.Log("Terminating training.\n");
+                trainer.StopTraining();
             }
         }
     }
