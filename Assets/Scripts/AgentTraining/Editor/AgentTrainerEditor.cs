@@ -37,7 +37,10 @@ namespace AgentTraining
             {
                 if (trainingTask == null || trainingTask.IsCompleted)
                 {
-                    trainingTask = Task.Run(trainer.TrainAgent);
+                    trainingTask = Task.Run(trainer.TrainAgent).ContinueWith(t =>
+                    {
+                        if (t.IsFaulted) Debug.LogError($"Training failed: {t.Exception?.GetBaseException()}");
+                    }, TaskScheduler.FromCurrentSynchronizationContext());
                 }
                 else
                 {

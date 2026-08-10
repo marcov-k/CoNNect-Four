@@ -2,7 +2,6 @@ using AgentTraining;
 using Environment;
 using NNNCSharp.Components.Models;
 using NNNCSharp.Components.Utilities.SaveSystem;
-using System.Collections;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -10,11 +9,11 @@ namespace Game
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] int messageDuration = 2000;
         InputManager inputManager;
         GameRenderer gameRenderer;
         Model agent;
         readonly Connect4 gameBoard = new();
-        Task gameThread;
 
         void Awake()
         {
@@ -25,22 +24,24 @@ namespace Game
         void Start()
         {
             agent = Saver.LoadModel(FindFirstObjectByType<AgentTrainer>().GetAgentSaveName());
-            gameThread = RunGame();
         }
 
         async Task RunGame()
         {
             bool playerWon = false;
             bool agentWon = false;
+            gameBoard.Reset();
+            gameRenderer.RenderState(gameBoard);
+            string message = "You are playing " + (gameBoard.AgentTurn ? "Yellow and going second" : "Red and going first");
+            await gameRenderer.RenderMessage(message, messageDuration);
             while (!gameBoard.BoardFilled())
             {
-                gameRenderer.RenderState(gameBoard);
                 bool agentActing = gameBoard.AgentTurn;
 
                 int action = await GetAction();
 
-                await Task.Run(() => gameRenderer.RenderAction(action, gameBoard));
                 gameBoard.TakeAction(action);
+                gameRenderer.RenderAction(action, gameBoard);
 
                 if (gameBoard.Won(action))
                 {
@@ -50,30 +51,28 @@ namespace Game
                 }
             }
 
-            string message;
             if (playerWon) message = "You Win!";
             else if (agentWon) message = "You Lose...";
             else message = "Tie";
 
-            gameRenderer.RenderMessage(message);
-            _ = PlayAgainPrompt();
+            await gameRenderer.RenderMessage(message, messageDuration);
+            inputManager.ShowPlayAgainPrompt();
         }
 
-        async Task PlayAgainPrompt()
+        public void Play()
         {
-            if (await Task.Run(inputManager.GetPlayAgain))
-            {
-                gameThread = RunGame();
-            }
-            else
-            {
-                Application.Quit();
-            }
+            inputManager.HidePlayPrompts();
+            _ = RunGame();
+        }
+
+        public void Quit()
+        {
+            Application.Quit();
         }
 
         async Task<int> GetAction()
         {
-            return gameBoard.AgentTurn ? gameBoard.GetAgentAction(agent) : await Task.Run(inputManager.GetPlayerAction);
+            return gameBoard.AgentTurn ? gameBoard.GetAgentAction(agent) : await inputManager.GetPlayerAction();
         }
     }
 }

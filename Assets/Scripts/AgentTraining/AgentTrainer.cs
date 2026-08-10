@@ -73,9 +73,9 @@ namespace AgentTraining
             agent?.Dispose();
             agent = new(new Layer[]
             {
-                new Dense(256, new LeakyReLU()),
-                new Dense(256, new LeakyReLU()),
-                new Dense(128, new LeakyReLU()),
+                new Conv(32, new int[] { 4, 4 }, new LeakyReLU(), Conv.Padding.Same, 0.1f),
+                new Conv(64, new int[] { 4, 4 }, new LeakyReLU(), Conv.Padding.Same, 0.1f),
+                new Dense(64, new LeakyReLU(), flatten: true, dropout: 0.2f),
                 new Dense(env.ActionCount, new Linear())
             }, env.StateFormat);
 

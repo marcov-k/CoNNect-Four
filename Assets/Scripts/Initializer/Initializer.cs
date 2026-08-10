@@ -10,7 +10,7 @@ namespace Game
         void Awake()
         {
             NNNLog.Output = Debug.Log;
-            Saver.DirectoryPath = FindFirstObjectByType<AgentTrainer>().GetAgentSaveDirectory();
+            Saver.DirectoryPath = FindFirstObjectByType<AgentTrainer>().GetAgentSaveDirectoryPath();
         }
     }
 }

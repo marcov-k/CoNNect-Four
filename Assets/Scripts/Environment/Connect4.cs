@@ -10,8 +10,8 @@ namespace Environment
     public class Connect4 : DQNEnvironment, ISelfPlay
     {
         // Base Environment API overrides
-        public override Tensor StateFormat => new(new int[] { 1, RowCount * ColumnCount + 1 }); // encodes state of all 42 board positions + player to move
-        public override int ActionCount => ColumnCount; // 1 per column
+        public override Tensor StateFormat => new(new int[] { 1, RowCount, ColumnCount, 2 }); // encodes state of all 42 board positions with separate channels for encoding each color pieces, channel 0 -> red, channel 1 -> yellow
+        public override int ActionCount => ColumnCount;
 
         // Self-play interface API overrides
         public bool AgentTurn { get; set; } = true;
@@ -42,14 +42,33 @@ namespace Environment
 
         public override Tensor GetNormalizedState()
         {
-            return GetState(); // no normalization needed - all values already between -1 and 1
+            Tensor state = new(StateFormat.Dimensions[1..].ToArray());
+            for (int row = 0; row < RowCount; row++)
+            {
+                for (int col = 0; col < ColumnCount; col++)
+                {
+                    if (State[row, col] == 0.0f) continue;
+
+                    int channel = (State[row, col] == 1.0f && RedTurn) ? 0 : 1;
+                    state[row, col, channel] = 1.0f;
+                }
+            }
+            return state;
         }
 
         public override Tensor GetState()
         {
-            Tensor state = new(new int[] { 43 });
-            State.Data.CopyTo(state.Data);
-            state[42] = RedTurn ? 1.0f : -1.0f;
+            Tensor state = new(StateFormat.Dimensions[1..].ToArray());
+            for (int row = 0; row < RowCount; row++)
+            {
+                for (int col = 0; col < ColumnCount; col++)
+                {
+                    if (State[row, col] == 0.0f) continue;
+
+                    int channel = State[row, col] == 1.0f ? 0 : 1;
+                    state[row, col, channel] = 1.0f;
+                }
+            }
             return state;
         }
 
@@ -92,11 +111,9 @@ namespace Environment
         public override bool ValidAction(int action, Tensor state = null)
         {
             state ??= GetNormalizedState();
-            using Tensor gridState = new(new int[] { 6, 7 });
-            state.Data[..^1].CopyTo(gridState.Data);
             for (int row = 0; row < RowCount; row++)
             {
-                if (gridState[row, action] == 0.0f) return true;
+                if (state[row, action, 0] == 0.0f && state[row, action, 1] == 0.0f) return true;
             }
             return false;
         }
@@ -250,6 +267,6 @@ namespace Environment
             return (won != null ? won.Value : false, tied);
         }
 
-        public Tensor GetBoard() => State;
+        public Tensor GetBoard() => State.Copy();
     }
 }
