@@ -28,8 +28,6 @@ namespace Game
         {
             var (bgWidth, bgHeight) = GetBackgroundSize();
 
-            float tokenSize = token.GetComponent<Renderer>().bounds.size.x;
-
             background.transform.position = new(0, 0);
 
             float xStep = (bgWidth / boardDims.y) / 2.0f;

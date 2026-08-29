@@ -89,6 +89,7 @@ namespace Environment
 
         public override int PickAgentAction(Tensor qValues, Tensor state = null)
         {
+            bool disposeState = state == null;
             state ??= GetNormalizedState();
 
             int action = Tensor.ArgMax(qValues);
@@ -97,6 +98,7 @@ namespace Environment
                 qValues[action] = float.MinValue;
                 action = Tensor.ArgMax(qValues);
             }
+            if (disposeState) state.Dispose();
             return action;
         }
 
@@ -112,11 +114,13 @@ namespace Environment
 
         public override bool ValidAction(int action, Tensor state = null)
         {
+            bool disposeState = state == null;
             state ??= GetNormalizedState();
             for (int row = 0; row < RowCount; row++)
             {
                 if (state[row, action, 0] == 0.0f && state[row, action, 1] == 0.0f) return true;
             }
+            if (disposeState) state.Dispose();
             return false;
         }
 
@@ -150,11 +154,14 @@ namespace Environment
 
         public int GetAgentAction(Model agent, Tensor state = null)
         {
+            bool disposeState = state == null;
             state ??= GetNormalizedState();
 
             using var wrapped = Tensor.WrapBatch(state);
             using var predicted = agent.Predict(wrapped);
-            return PickAgentAction(predicted, state);
+            int action = PickAgentAction(predicted, state);
+            if (disposeState) state.Dispose();
+            return action;
         }
 
         // Additional environment-specific functionality
