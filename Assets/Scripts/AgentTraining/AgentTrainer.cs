@@ -12,7 +12,6 @@ using NNNCSharp.Components.Optimizers;
 using NNNCSharp.Components.Costs;
 using NNNCSharp.Components.Buffers;
 using NNNCSharp.Components.Activations;
-using System.Threading.Tasks;
 
 namespace AgentTraining
 {

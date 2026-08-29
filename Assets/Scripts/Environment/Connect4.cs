@@ -14,6 +14,7 @@ namespace Environment
         public override int ActionCount => ColumnCount;
 
         // Self-play interface API overrides
+        public bool Won { get; set; } = false;
         public bool AgentTurn { get; set; } = true;
         public int OpponentCount { get; set; }
         public int OpponentIndex { get; set; }
@@ -49,7 +50,7 @@ namespace Environment
                 {
                     if (State[row, col] == 0.0f) continue;
 
-                    int channel = (State[row, col] == 1.0f && RedTurn) ? 0 : 1;
+                    int channel = (State[row, col] == 1.0f == RedTurn) ? 0 : 1;
                     state[row, col, channel] = 1.0f;
                 }
             }
@@ -74,6 +75,7 @@ namespace Environment
 
         public override void Reset()
         {
+            Won = false;
             AgentTurn = Random.Next(2) == 1; // randomly pick agent to play red or yellow
             (this as ISelfPlay).UpdateOpponentIndex(); // select a new opponent agent for the next episode
 
@@ -159,10 +161,10 @@ namespace Environment
 
         (float reward, bool won) EvaluateAction(int action)
         {
-            bool won = Won(action);
-            bool tied = !won && BoardFilled();
+            Won = CheckWin(action);
+            bool tied = !Won && BoardFilled();
 
-            return (won ? WinReward : (tied ? TieReward : 0.0f), won);
+            return (Won ? WinReward : (tied ? TieReward : 0.0f), Won);
         }
 
         public void TakeAction(int action)
@@ -179,7 +181,7 @@ namespace Environment
             AgentTurn = !AgentTurn;
         }
 
-        public bool Won(int action)
+        public bool CheckWin(int action)
         {
             // Find row which was filled - action = column
             int row = 0;
@@ -260,7 +262,7 @@ namespace Environment
                 bool agentActing = AgentTurn;
                 int action = AgentTurn ? GetAgentAction(agent) : PickRandomAction();
                 TakeAction(action);
-                if (Won(action)) won = agentActing;
+                if (CheckWin(action)) won = agentActing;
                 tied = won == null && BoardFilled();
             }
 

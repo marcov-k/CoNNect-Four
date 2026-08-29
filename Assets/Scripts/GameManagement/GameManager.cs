@@ -32,6 +32,7 @@ namespace Game
             bool agentWon = false;
             gameBoard.Reset();
             gameRenderer.RenderState(gameBoard);
+            inputManager.UpdateValidColumns(gameBoard);
             string message = "You are playing " + (gameBoard.AgentTurn ? "Yellow and going second" : "Red and going first");
             await gameRenderer.RenderMessage(message, messageDuration);
             while (!gameBoard.BoardFilled())
@@ -42,8 +43,9 @@ namespace Game
 
                 gameBoard.TakeAction(action);
                 gameRenderer.RenderAction(action, gameBoard);
+                inputManager.UpdateValidColumns(gameBoard);
 
-                if (gameBoard.Won(action))
+                if (gameBoard.CheckWin(action))
                 {
                     if (agentActing) agentWon = true;
                     else playerWon = true;

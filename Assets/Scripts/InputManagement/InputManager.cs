@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Threading.Tasks;
+using Environment;
 
 namespace Game
 {
@@ -11,17 +12,14 @@ namespace Game
         GameRenderer gameRenderer;
         bool Selecting
         {
-            get => _selecting;
             set
             {
-                _selecting = value;
                 foreach (var col in columnHighlights)
                 {
                     col.Selecting = value;
                 }
             }
         }
-        bool _selecting = false;
         ColumnHighlight[] columnHighlights;
         TaskCompletionSource<int> _tcs = new();
 
@@ -50,6 +48,14 @@ namespace Game
         public void ActionSelected(int action)
         {
             _tcs.SetResult(action);
+        }
+
+        public void UpdateValidColumns(Connect4 gameBoard)
+        {
+            foreach (var highlight in columnHighlights)
+            {
+                highlight.ValidColumn = gameBoard.ValidAction(highlight.Column);
+            }
         }
 
         public void ShowPlayPrompt()

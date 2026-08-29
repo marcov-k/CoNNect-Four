@@ -6,7 +6,9 @@ namespace Game
     [RequireComponent(typeof(SpriteRenderer))]
     public class ColumnHighlight : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
     {
-        [SerializeField] Color highlightColor;
+        [SerializeField] Color validColor;
+        [SerializeField] Color invalidColor;
+        Color highlightColor;
         Color defaultColor = Color.clear;
         SpriteRenderer myRenderer;
         public bool Selecting
@@ -15,15 +17,32 @@ namespace Game
             set
             {
                 _selecting = value;
-                if (!value)
-                {
-                    myRenderer.color = defaultColor;
-                }
+                myRenderer.color = value && Hovering ? highlightColor : defaultColor;
             }
         }
         bool _selecting = false;
+        bool Hovering
+        {
+            get => _hovering;
+            set
+            {
+                _hovering = value;
+                myRenderer.color = value && Selecting ? highlightColor : defaultColor;
+            }
+        }
+        bool _hovering = false;
+        public bool ValidColumn
+        {
+            get => _validColumn;
+            set
+            {
+                _validColumn = value;
+                highlightColor = value ? validColor : invalidColor;
+            }
+        }
+        bool _validColumn = true;
         InputManager inputManager;
-        int column = 0;
+        public int Column { get; private set; } = 0;
 
         void Awake()
         {
@@ -33,32 +52,21 @@ namespace Game
 
         void Start()
         {
+            highlightColor = validColor;
             myRenderer.color = defaultColor;
         }
 
-        public void SetColumn(int col)
-        {
-            column = col;
-        }
+        public void SetColumn(int col) => Column = col;
 
-        public void OnPointerEnter(PointerEventData _)
-        {
-            if (Selecting)
-            {
-                myRenderer.color = highlightColor;
-            }
-        }
+        public void OnPointerEnter(PointerEventData _) => Hovering = true;
 
-        public void OnPointerExit(PointerEventData _)
-        {
-            myRenderer.color = defaultColor;
-        }
+        public void OnPointerExit(PointerEventData _) => Hovering = false;
 
         public void OnPointerClick(PointerEventData _)
         {
-            if (Selecting)
+            if (Selecting && ValidColumn)
             {
-                inputManager.ActionSelected(column);
+                inputManager.ActionSelected(Column);
             }
         }
     }
