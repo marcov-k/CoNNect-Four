@@ -31,10 +31,6 @@ jobs:
           targetPlatform: StandaloneWindows64
           buildName: CoNNect-Four
 
-      - name: List build outputs
-        shell: pwsh
-        run: GetChildItem -Path "$env:GITHUB_WORKSPACE\build" -Recurse
-
       - name: Build installer
         shell: pwsh
         run: |
