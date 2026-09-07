@@ -25,6 +25,7 @@ SolidCompression=yes
 WizardStyle=modern
 
 UninstallDisplayName={#GameName}
+UninstallDisplayIcon={app}\{#ExecutableName}
 
 [Files]
 Source: "{#BuildDir}\{#ExecutableName}"; DestDir: "{app}"; Flags: ignoreversion
