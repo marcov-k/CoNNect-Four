@@ -74,5 +74,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: connect-four
           ITCH_USER: flyingarthur
-          Package: release/**/CoNNect-Four-${{ github.ref_name }}.exe
+          PACKAGE: release/**/CoNNect-Four-${{ github.ref_name }}.exe
           VERSION: ${{ github.ref_name }}
