@@ -27,6 +27,7 @@ namespace Environment
 
         // Training parameters
         const float WinReward = 2.0f;
+        const float LossPenalty = 5.0f;
         const float TieReward = 0.15f;
 
         // Utilities
@@ -171,7 +172,11 @@ namespace Environment
             Won = CheckWin(action);
             bool tied = !Won && BoardFilled();
 
-            return (Won ? WinReward : (tied ? TieReward : 0.0f), Won);
+            float reward = 0.0f;
+            if (Won) reward = AgentTurn ? LossPenalty : WinReward;
+            else if (tied) reward = TieReward;
+
+            return (reward, Won);
         }
 
         public void TakeAction(int action)
