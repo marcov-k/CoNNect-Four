@@ -68,3 +68,13 @@ jobs:
           files: release/**/CoNNect-Four-${{ github.ref_name }}.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to Itch.io
+        uses: yeslayla/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          CHANNEL: windows
+          ITCH_GAME: connect-four
+          ITCH_USER: flyingarthur
+          Package: release/**/CoNNect-Four-${{ github.ref_name }}.exe
+          VERSION: "{{ github.ref_name }}"
