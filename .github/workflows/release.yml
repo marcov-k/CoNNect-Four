@@ -30,6 +30,10 @@ jobs:
           unityVersion: '6000.0.69f1'
           targetPlatform: StandaloneWindows64
 
+      - name: List build outputs
+        shell: pwsh
+        run: GetChildItem -Path "$env:GITHUB_WORKSPACE\build" -Recurse
+
       - name: Build installer
         shell: pwsh
         run: |
