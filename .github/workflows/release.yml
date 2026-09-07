@@ -27,3 +27,44 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows64
+
+      - name: Build installer
+        shell: pwsh
+        run: |
+          $Version = "${{ github.ref_name }}".TrimStart("v")
+
+          $ "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+            "/DApplicationVersion=#Version" `
+            "/DBuildDir=$env:GITHUB_WORKSPACE\build\StandaloneWindows64" `
+            "$env:GITHUB_WORKSPACE\installer\CoNNect-Four.iss"
+
+          $Installer = "$env:GITHUB_WORKSPACE\installer\output\CoNNect-Four-${{ github.ref_name }}.exe"
+
+      - name: Upload release package
+        uses: actions/upload-artifact@v4
+        with:
+          name: CoNNect-Four
+          path: installer/output/CoNNect-Four-${{ github.ref_name }}.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download release package
+        uses: actions/download-artifact@v4
+        with:
+          path: release
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: CoNNect-Four ${{ github.ref_name }}
+          generate_release_notes: false
+          files: release/**/CoNNect-Four-${{ github.ref_name }}.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
