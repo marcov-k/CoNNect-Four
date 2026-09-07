@@ -103,6 +103,7 @@ namespace AgentTraining
         public void TrainAgent()
         {
             NNNLog.Output = Debug.Log;
+            Saver.DirectoryPath = GetAgentSaveDirectoryPath();
 
             if (agent == null)
             {
@@ -136,11 +137,10 @@ namespace AgentTraining
             FIFOBuffer<Episode> _ = null;
 
             NNNLog.WriteLine("Beginning agent training.");
-            trainer.Train(ref _, episodes, testEvery, testEpisodes);
+            trainer.Train(ref _, episodes, testEvery, testEpisodes, agentSaveName);
             agent = trainer.Agent;
             NNNLog.WriteLine("Agent training finished.");
 
-            Saver.DirectoryPath = GetAgentSaveDirectoryPath();
             Saver.SaveModel(agent, agentSaveName, "connect-four neural network player");
             NNNLog.WriteLine("Agent saved to file.");
         }
