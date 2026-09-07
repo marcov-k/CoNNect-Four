@@ -20,13 +20,23 @@ jobs:
         shell: pwsh
         run: choco install innosetup --no-progress -y
 
-      - name: Build CoNNect-Four
-        uses: game-ci/unity-builder@v4
-        env:
-          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      - name: Setup Unity
+        uses: game-ci/unity-setup@v2
         with:
-          targetPlatform: StandaloneWindows64
+          unity-version: '6000.0.69f1'
+          build-targets: 'StandaloneWindows64'
+
+      - name: Activate Unity license
+        uses: buildalon/activate-unity-license@v2
+        with:
+          license: 'Personal'
+          username: ${{ secrets.UNITY_EMAIL }}
+          password: ${{ secrets.UNITY_PASSWORD }}
+
+      - name: Build CoNNect-Four
+        uses: game-ci/unity-builder@v2
+        with:
+          targetPlatform: Windows64
 
       - name: Build installer
         shell: pwsh
