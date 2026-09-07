@@ -614,19 +614,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5819db4bd4145641849474f03153d8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  episodes: 20000
-  minExperiences: 2000
+  episodes: 50000
+  minExperiences: 5000
   startExploration: 1
-  explorationDecay: 0.9995
-  minExploration: 0.001
-  replayBufferSize: 20000
+  explorationDecay: 0.9999
+  minExploration: 0.02
+  replayBufferSize: 50000
   batchSize: 128
-  agentBufferSize: 6
-  opponentCopyRate: 1000
-  minRandomOpponentEpisodes: 1000
+  agentBufferSize: 10
+  opponentCopyRate: 500
+  minRandomOpponentEpisodes: 2000
   trainEvery: 1
-  learningRate: 0.001
-  discount: 0.999
+  learningRate: 0.0005
+  discount: 0.99
   tau: 0.005
   maxGradNorm: 1
   testEvery: 1000
