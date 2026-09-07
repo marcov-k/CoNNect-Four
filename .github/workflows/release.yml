@@ -34,11 +34,9 @@ jobs:
           $Version = "${{ github.ref_name }}".TrimStart("v")
 
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
-            "/DApplicationVersion=#Version" `
+            "/DApplicationVersion=$Version" `
             "/DBuildDir=$env:GITHUB_WORKSPACE\build\StandaloneWindows64" `
             "$env:GITHUB_WORKSPACE\installer\CoNNect-Four.iss"
-
-          $Installer = "$env:GITHUB_WORKSPACE\installer\output\CoNNect-Four-${{ github.ref_name }}.exe"
 
       - name: Upload release package
         uses: actions/upload-artifact@v4
@@ -77,4 +75,4 @@ jobs:
           ITCH_GAME: connect-four
           ITCH_USER: flyingarthur
           Package: release/**/CoNNect-Four-${{ github.ref_name }}.exe
-          VERSION: "{{ github.ref_name }}"
+          VERSION: ${{ github.ref_name }}
