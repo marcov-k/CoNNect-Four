@@ -30,6 +30,8 @@ UninstallDisplayIcon={app}\{#ExecutableName}
 [Files]
 Source: "{#BuildDir}\{#ExecutableName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BuildDir}\UnityPlayer.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#BuildDir}\MonoBleedingEdge\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
+Source: "{#BuildDir}\UnityCrashHandler64.exe"; DestDir: "{app}"; Flags: ignoreversion
 Source: "{#BuildDir}\CoNNect-Four_Data\*"; DestDir: "{app}\CoNNect-Four_Data"; Flags: recursesubdirs createallsubdirs ignoreversion
 
 [Icons]
