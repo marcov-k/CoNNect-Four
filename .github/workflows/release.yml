@@ -29,6 +29,7 @@ jobs:
         with:
           unityVersion: '6000.0.69f1'
           targetPlatform: StandaloneWindows64
+          buildName: CoNNect-Four
 
       - name: List build outputs
         shell: pwsh
