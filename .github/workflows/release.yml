@@ -33,7 +33,7 @@ jobs:
         run: |
           $Version = "${{ github.ref_name }}".TrimStart("v")
 
-          $ "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
             "/DApplicationVersion=#Version" `
             "/DBuildDir=$env:GITHUB_WORKSPACE\build\StandaloneWindows64" `
             "$env:GITHUB_WORKSPACE\installer\CoNNect-Four.iss"
