@@ -8,7 +8,7 @@ AppName={#GameName}
 AppVersion={#GameVersion}
 AppPublisher={#Publisher}
 
-DeafultDirName={autopf}\{#GameName}
+DefaultDirName={autopf}\{#GameName}
 DefaultGroupName={#GameName}
 
 OutputDir=output
