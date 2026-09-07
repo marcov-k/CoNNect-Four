@@ -58,6 +58,7 @@ jobs:
       - name: Download release package
         uses: actions/download-artifact@v4
         with:
+          name: CoNNect-Four
           path: release
 
       - name: Create GitHub release
@@ -66,7 +67,7 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: CoNNect-Four ${{ github.ref_name }}
           generate_release_notes: false
-          files: release/**/CoNNect-Four-${{ github.ref_name }}.exe
+          files: release/CoNNect-Four-${{ github.ref_name }}.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -77,5 +78,5 @@ jobs:
           CHANNEL: windows
           ITCH_GAME: connect-four
           ITCH_USER: flyingarthur
-          PACKAGE: release/**/CoNNect-Four-${{ github.ref_name }}.exe
+          PACKAGE: release/CoNNect-Four-${{ github.ref_name }}.exe
           VERSION: ${{ github.ref_name }}
